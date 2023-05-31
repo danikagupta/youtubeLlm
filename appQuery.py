@@ -24,15 +24,15 @@ def setEnvVariables():
   print(f"App Config is {app_config}")
 
 def getMatchingDocs(q):
-  openai.api_key=os.environ['OPENAI_API_KEY'] 
-  pinecone.init( api_key=os.environ['PINECONE_API_KEY'], environment=os.environ['PINECONE_API_ENV'])
+  openai.api_key=app_config['OPENAI_API_KEY'] 
+  pinecone.init( api_key=app_config['PINECONE_API_KEY'], environment=app_config['PINECONE_API_ENV'])
   model='text-embedding-ada-002'
   embed_query=openai.Embedding.create(input=q,engine=model)
   query_embeds=embed_query['data'][0]['embedding']
   #st.dataframe(query_embeds)
-  index=pinecone.Index(os.environ['PINECONE_INDEX_NAME'])
+  index=pinecone.Index(app_config['PINECONE_INDEX_NAME'])
   #print(query_embeds)
-  response=index.query(query_embeds,top_k=3,include_metadata=True,namespace=os.environ['PINECONE_NAMESPACE'])
+  response=index.query(query_embeds,top_k=3,include_metadata=True,namespace=app_config['PINECONE_NAMESPACE'])
   #print(response['matches'])
   li=[]
   for r in response['matches']:
@@ -61,7 +61,7 @@ def youtubeVideoOffset(url,offset):
 
 
 def runQuery(q,li):
-  llm = OpenAI(temperature=0, openai_api_key=os.environ['OPENAI_API_KEY'])
+  llm = OpenAI(temperature=0, openai_api_key=app_config['OPENAI_API_KEY'])
   chain = load_qa_with_sources_chain(llm, chain_type="stuff")
   docs=[]
   for l in li:
