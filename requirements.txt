@@ -1,0 +1,6 @@
+streamlit
+pytube
+AssemblyAI
+langchain
+pinecone-client
+openai
